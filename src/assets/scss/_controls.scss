@@ -5,20 +5,34 @@
         position: relative;
         border-radius: 10px;
         font-size: 4rem;
+        transition: filter 150ms ease-in-out;
         overflow: hidden;
         padding: 20px 30px;
         line-height: 100%;
         border-radius: 16px;
+        user-select: none;
+        cursor: pointer;
         position: relative;
         font-weight: 700;
         box-shadow:  10px 10px 30px #00000023,
-                    -10px -10px 30px #ffffff0c;
+        -10px -10px 30px #ffffff0c;
         border: 7px ridge #00000023;
         &::before{
-            background: linear-gradient(145deg,  #00000015, #ffffff05);
+            background: linear-gradient(145deg,  #00000023, #ffffff05);
             content: "";
             position: absolute;
             inset: 0;
+        }
+        &:hover{
+            filter: drop-shadow(0.02em 0.02em 0.02em #01140d);
+        }
+        &:active{
+            border: 7px ridge #00000031;
+            box-shadow:  10px 10px 30px #00000020,
+            -10px -10px 30px #ffffff09;
+            &::before{
+                background: linear-gradient(145deg,  #00000027, #ffffff03);
+            }
         }
     }
 }
