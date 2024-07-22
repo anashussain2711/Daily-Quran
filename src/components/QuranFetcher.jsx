@@ -1,11 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const QuranFetcher = () => {
-    const [ayah, SetAyah] = useState({
-
-    });
-    const fetchData = async () => {
+const QuranFetcher = ({selectedControl}) => {
+    const [ruku, setRuku] = useState({});
+    const fetchRandomAyah = async () => {
         try {
             const response = await axios.get('https://api.quran.com/api/v4/quran/verses/uthmani?ruku_number=1');
             console.log(response.data.verses[0])
@@ -15,8 +13,10 @@ const QuranFetcher = () => {
         }
     };
     useEffect(() => {
-        fetchData();
-    }, []);
+        if(selectedControl === "ayah"){
+            fetchRandomAyah();
+        }
+    }, [selectedControl]);
     return ( 
         <h1>
             {ayah.text}

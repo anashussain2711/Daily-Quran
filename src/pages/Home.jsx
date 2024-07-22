@@ -1,18 +1,20 @@
 import { useState } from "react";
 import Controls from "../components/Controls";
+// import QuranFetcher from "../components/QuranFetcher";
 import background from "../assets/images/background.png"
 
 export default function Home() {
   const [controls, setControls] = useState([
     {
-      key: "ayat",
-      text: "Ayat"
+      key: "ayah",
+      text: "Ayah"
     },
     {
       key: "ruku",
       text: "Ruku"
     }
   ])
+  const [selectedControl, setSelectedControl] = useState("");
   return (
     <section
     style={{
@@ -20,7 +22,8 @@ export default function Home() {
     }}
     className="home">
       <div className="inner">
-        <Controls controls={controls} />
+        {/* <QuranFetcher selectedControl={selectedControl}/> */}
+        <Controls controls={controls} setSelectedControl={setSelectedControl} />
       </div>
     </section>
   );
