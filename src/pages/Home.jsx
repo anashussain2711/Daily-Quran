@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Controls from "../components/Controls";
-// import QuranFetcher from "../components/QuranFetcher";
+import QuranFetcher from "../components/QuranFetcher";
 import background from "../assets/images/background.png"
 
 export default function Home() {
@@ -22,7 +22,7 @@ export default function Home() {
     }}
     className="home">
       <div className="inner">
-        {/* <QuranFetcher selectedControl={selectedControl}/> */}
+        <QuranFetcher selectedControl={selectedControl} setControls={setControls}/>
         <Controls controls={controls} setSelectedControl={setSelectedControl} />
       </div>
     </section>
