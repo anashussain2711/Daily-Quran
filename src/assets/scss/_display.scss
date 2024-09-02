@@ -1,0 +1,77 @@
+.display {
+    height: 100%;
+    margin: 20px 0;
+    padding: 0 10px;
+    overflow: hidden;
+    width: 100%;
+    scrollbar-gutter: stable both-edges;
+
+    /* width */
+    &::-webkit-scrollbar {
+        width: 5px;
+        position: absolute;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.192);
+        border-radius: 10px;
+    }
+    
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        // background: linear-gradient(0deg, rgba(218, 161, 76, 0.507) 0%, rgba(224, 200, 113, 0.507) 46%, rgba(175, 117, 30, 0.521) 100%);
+        background: linear-gradient(0deg, rgba(218, 161, 76, 1) 0%, rgba(224, 200, 113, 1) 46%, rgba(175, 117, 30, 1) 100%);
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(0deg, rgba(218, 161, 76, 1) 0%, rgba(224, 200, 113, 1) 46%, rgba(175, 117, 30, 1) 100%);
+    }
+    .starter-message{
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        h2{
+            text-align: center;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        p{
+            font-size: 20px;
+            text-align: center;
+        }
+    }
+    .ayah {
+        margin-bottom: 50px;
+        display: flex;
+        width: 100%;
+
+        .ayah-key {
+            font-size: 20px;
+            min-width: 50px;
+            font-weight: 900;
+        }
+
+        .ayah-content {
+            width: 100%;
+
+            .arabic {
+                text-align: right;
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .english-translation {
+                text-align: left;
+                font-family: Helvetica, sans-serif;
+                font-size: 16px;
+            }
+
+        }
+    }
+}
