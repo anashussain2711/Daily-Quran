@@ -1,110 +1,60 @@
-import { useState } from "react";
-import Controls from "../components/Controls";
-import QuranDisplay from "../components/QuranDisplay";
+import { AnimatePresence } from "framer-motion";
 import background from "../assets/images/background.png"
-import axios from "axios";
-import $ from "jquery";
+import Starter from "../components/Starter";
+import { useGetRandomAyahQuery, useGetRandomRukuQuery } from "../store/quran-api";
+import { useEffect, useState } from "react";
+import QuranDisplay from "../components/QuranDisplay";
 
 export default function Home() {
-  const [ruku, setRuku] = useState({});
-  const [ayah, setAyah] = useState({});
-  const [display, setDisplay] = useState([]);
-  const [controls, setControls] = useState([
-    {
-      key: "ayah",
-      text: "Ayah"
-    },
-    {
-      key: "ruku",
-      text: "Ruku"
-    }
-  ])
-  const [selectedControl, setSelectedControl] = useState("");
 
-  const changeControls = (newControls) => {
-    // Change controls animation
-    $(".controls").fadeOut(1000, function () {
-      setControls(
-        newControls.map((control) => ({
-          key: control.key,
-          text: control.text,
-        }))
-      );
-      $(".controls").fadeIn(1000);
-    });
-  };
-  const showCompleteRuku = () => {
-    if (display) {
-      $(".display").fadeOut(1000, function () {
-        setDisplay(() => ruku);
-        $(".display").fadeIn(1000);
-      });
-    } else {
-      //fetch random ruku
-    }
-    changeControls([
-      { key: "next_ruku", text: "Next Ruku" }
-    ]);
-  }
-  const fetchRandomAyah = async () => {
-    //change controls animation
-    changeControls([
-      { key: "next_ayah", text: "Next Ayah" },
-      { key: "complete_ruku", text: "Complete Ruku" }
-    ]);
-    try {
-      // Generate random ruku
-      const randomRukuNumber = Math.floor(Math.random() * 558) + 1;
+  const [showStarter, setShowStarter] = useState(true);
+  const [ayahRequested, setAyahRequested] = useState(false);
+  const [rukuRequested, setRukuRequested] = useState(false);
+  const [showQuranDisplay, setShowQuranDisplay] = useState(false);
 
-      // Get the random ruku (Arabic text)
-      const arabicResponse = await axios.get(`https://api.quran.com/api/v4/quran/verses/uthmani?ruku_number=${randomRukuNumber}`);
-      let ruku = arabicResponse.data.verses;
-      const rukuLength = ruku.length;
-      const randomIndex = Math.floor(Math.random() * rukuLength);
+  const {
+    data: ayah,
+    refetch: refetchAyah,
+    isLoading: isLoadingAyah,
+    isFetching: isFetchingAyah,
+    isError: isErrorAyah,
+    error: errorAyah
+  } = useGetRandomAyahQuery(undefined, { skip: !ayahRequested });
 
-      // Get the corresponding translations for the entire ruku
-      const translationResponse = await axios.get(`https://api.quran.com/api/v4/quran/translations/131?ruku_number=${randomRukuNumber}`);
-      const translations = translationResponse.data.translations;
+  const {
+    data: ruku,
+    refetch: refetchRuku,
+    isLoading: isLoadingRuku,
+    isFetching: isFetchingRuku,
+    isError: isErrorRuku,
+    error: errorRuku
+  } = useGetRandomRukuQuery(undefined, { skip: !rukuRequested });
 
-      // Combine each ayah with its corresponding translation based on the index
-      ruku = ruku.map((ayah, index) => ({
-        ...ayah,
-        translation: translations[index] ? translations[index].text : "Translation not available",
-        indexInRuku: index,
-      }));
+  // Fetch Ayah after setting ayahRequested to true
+  useEffect(() => {
+    if (ayahRequested) refetchAyah();
+  }, [ayahRequested, refetchAyah]);
 
-      // Set the ayah and display states
-      const selectedAyah = ruku[randomIndex]; // Select the ayah using the updated ruku
+  // Fetch Ruku after setting rukuRequested to true
+  useEffect(() => {
+    if (rukuRequested) refetchRuku();
+  }, [rukuRequested, refetchRuku]);
 
-      setRuku(ruku);
-      setAyah(selectedAyah);
-      setDisplay((prevDisplay) => [...prevDisplay, selectedAyah]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const showNextAyah = () => {
-    if (ayah.indexInRuku !== ruku.length - 1) {
-      setAyah({
-        ...ruku[ayah.indexInRuku + 1],
-        translation: ruku[ayah.indexInRuku + 1].translation,
-        indexInRuku: ayah.indexInRuku + 1,
-      });
-      setDisplay((prevDisplay) => [
-        ...prevDisplay,
-        {
-          ...ruku[ayah.indexInRuku + 1],
-          indexInRuku: ayah.indexInRuku + 1,
-        }
-      ]);
-      if (ayah.indexInRuku + 1 == ruku.length - 1) {
-        console.log("end of ruku")
-        changeControls([
-          { key: "next_ruku", text: "Next Ruku" }
-        ]);
-      }
-    }
-  }
+  const fetchAyah = () => setAyahRequested(true);
+  const fetchRuku = () => setRukuRequested(true);
+
+  // useEffect(() => {
+  //   if (!isLoadingAyah && !isFetchingAyah && ayah) {
+  //     console.log('Ayah:', ayah);
+  //   }
+  // }, [isLoadingAyah, isFetchingAyah, ayah]);
+
+  // useEffect(() => {
+  //   if (!isLoadingRuku && !isFetchingRuku && ruku) {
+  //     console.log('Ruku:', ruku);
+  //   }
+  // }, [isLoadingRuku, isFetchingRuku, ruku]);
+
   return (
     <section
       style={{
@@ -112,18 +62,27 @@ export default function Home() {
       }}
       className="home">
       <div className="inner">
-        <QuranDisplay
-          ayah={ayah}
-          display={display}
-          selectedControl={selectedControl}
-        />
-        <Controls
-          controls={controls}
-          setSelectedControl={setSelectedControl}
-          fetchRandomAyah={fetchRandomAyah}
-          showNextAyah={showNextAyah}
-          showCompleteRuku={showCompleteRuku}
-        />
+        <AnimatePresence mode="wait" onExitComplete={() => setShowQuranDisplay(true)}>
+          {
+            showStarter &&
+            <Starter
+              refetchAyah={fetchAyah}
+              refetchRuku={fetchRuku}
+              closeStarter={() => setShowStarter(false)}
+            />
+          }
+        </AnimatePresence>
+        <AnimatePresence>
+          {showQuranDisplay && (
+            <QuranDisplay
+              ayah={ayah}
+              ruku={ruku}
+              isLoadingAyah={isLoadingAyah}
+              isLoadingRuku={isLoadingRuku}
+              show={showQuranDisplay}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

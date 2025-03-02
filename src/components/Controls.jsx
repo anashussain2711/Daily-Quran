@@ -1,33 +1,29 @@
-const Controls = ({ controls, setSelectedControl, showNextAyah, fetchRandomAyah, showCompleteRuku }) => {
-    const select = (control) => {
-        setSelectedControl(control)
-        if (control === "ayah") {
-            fetchRandomAyah();
-        }
-        else if (control === "next_ayah") {
-            showNextAyah();
-        }
-        else if (control === "complete_ruku"){
-            showCompleteRuku()
-        }
+const Controls = ({ closeStarter, refetchAyah, refetchRuku, fixed = false }) => {
+
+    function onAyahClick() {
+        closeStarter()
+        refetchAyah()
     }
+
+    function onRukuClick() {
+        closeStarter()
+        refetchRuku()
+    }
+
     return (
-        <div className="controls">
-            {
-                controls.map((control, index) => {
-                    return (
-                        <div className={"text control " + control.key}
-                            onClick={
-                                () => {
-                                    select(control.key)
-                                }
-                            }
-                            key={index}>
-                            {control.text}
-                        </div>
-                    )
-                })
-            }
+        <div className="controls" style={
+            fixed
+                ?
+                {
+                    position: "absolute",
+                    bottom: 0,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                }
+                :
+                {}}>
+            <div className="control text medium" onClick={onAyahClick} >Ayah</div>
+            <div className="control text medium" onClick={onRukuClick} >Ruku</div>
         </div>
     );
 }

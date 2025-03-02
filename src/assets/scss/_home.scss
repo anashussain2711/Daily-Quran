@@ -6,10 +6,12 @@
     .inner{
         max-width: 1400px;
         margin: 0 auto;
+        padding: 0 20px;
         display: flex;
         height: 100%;
         align-items: center;
         flex-direction: column;
         position: relative;
+        justify-content: center;
     }
 }
